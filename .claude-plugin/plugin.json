@@ -1,7 +1,7 @@
 {
   "name": "interactive-planning",
   "version": "4.1.0",
-  "description": "File-based planning with interactive gates and native task tracking. Supports task-based (single plan file) and spec-driven (multi-file specs with manifest) modes with dependency DAG and phase/sprint hierarchy.",
+  "description": "Structured planning for Claude Code with interactive decision gates. Walks through requirements gathering, approach selection, and plan validation before any code is written. Two modes: task-based (single plan file with sequential phases) for straightforward features, and spec-driven (multi-file specs with dependency DAG, topological sprint grouping, and two-level task tracking) for complex multi-domain work. Includes session recovery, auto-detection of complex tasks, and checkpoint protocols for error escalation.",
   "author": {
     "name": "Wesley Shih",
     "email": "shihwesley@gmail.com",

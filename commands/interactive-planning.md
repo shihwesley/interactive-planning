@@ -1,7 +1,7 @@
 ---
 description: Manage interactive planning sessions (start, status, resume, reset)
 argument-hint: [status|resume|reset]
-allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "AskUserQuestion", "TaskCreate", "TaskUpdate", "TaskList", "TaskGet", "Skill"]
+allowed-tools: ["Read", "Write", "Edit", "Bash", "AskUserQuestion", "TaskCreate", "TaskUpdate", "TaskList", "TaskGet", "Skill"]
 ---
 
 # Interactive Planning Command

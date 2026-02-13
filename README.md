@@ -4,6 +4,16 @@ A Claude Code plugin that turns complex tasks into structured plans before you w
 
 Two modes: **task-based** for straightforward features, **spec-driven** for multi-domain work with dependency tracking.
 
+## Contents
+
+- [How it works](#how-it-works)
+- [Install](#install)
+- [Usage](#usage)
+- [Planning modes](#planning-modes)
+- [What's in the box](#whats-in-the-box)
+- [Key concepts](#key-concepts)
+- [Gate flow](#gate-flow)
+
 ## How it works
 
 ```
@@ -116,6 +126,29 @@ Good for: multi-domain features, large refactors, anything where separate concer
 **3-Strike Protocol** — Three attempts at a failing approach, then escalate to the user.
 
 **Dependency DAG** (spec-driven) — Specs declare what they need from upstream and what they provide downstream. Sprint grouping is computed automatically.
+
+## Gate flow
+
+```mermaid
+flowchart TD
+    A[User request] --> B{Gate 1: Mode + Priority}
+    B --> C{Gate 2: Requirements}
+    C --> D{Task-based?}
+    D -->|Yes| E{Gate 3: Approach}
+    D -->|No| F{Gate 3: Spec Decomposition}
+    E --> G[Create task_plan.md + findings.md + progress.md]
+    F --> H[Create manifest.md + spec files + findings.md]
+    G --> I{Gate 4: Validate plan}
+    H --> I
+    I -->|Approved| J[Execute with checkpoints]
+    I -->|Adjust| B
+    J --> K{Phase complete?}
+    K -->|Yes| L{More phases?}
+    K -->|Stuck| M[3-Strike Protocol]
+    L -->|Yes| J
+    L -->|No| N[Done]
+    M --> J
+```
 
 ## License
 
