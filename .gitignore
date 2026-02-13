@@ -1,0 +1,8 @@
+# Planning artifacts (created in user's project, not in plugin)
+task_plan.md
+findings.md
+progress.md
+docs/plans/
+
+# OS
+.DS_Store

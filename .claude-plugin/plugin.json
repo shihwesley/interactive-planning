@@ -1,0 +1,22 @@
+{
+  "name": "interactive-planning",
+  "version": "4.1.0",
+  "description": "File-based planning with interactive gates and native task tracking. Supports task-based (single plan file) and spec-driven (multi-file specs with manifest) modes with dependency DAG and phase/sprint hierarchy.",
+  "author": {
+    "name": "Wesley Shih",
+    "email": "shihwesley@gmail.com",
+    "url": "https://github.com/shihwesley"
+  },
+  "homepage": "https://github.com/shihwesley/interactive-planning",
+  "repository": "https://github.com/shihwesley/interactive-planning",
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "task-management",
+    "spec-driven",
+    "interactive",
+    "manus-style",
+    "file-based",
+    "dependency-dag"
+  ]
+}

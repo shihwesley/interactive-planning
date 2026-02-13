@@ -1,0 +1,17 @@
+{
+  "description": "Detect existing planning files on session start",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/detect-planning-files.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
