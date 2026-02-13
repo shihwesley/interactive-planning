@@ -35,7 +35,7 @@ fi
 # Extract current phase from progress.md if it exists
 current_phase=""
 if [ -f "$cwd/progress.md" ]; then
-  current_phase=$(grep -m1 "Status.*in_progress" "$cwd/progress.md" 2>/dev/null | head -1 || true)
+  current_phase=$(grep -m1 "Status.*in_progress" "$cwd/progress.md" 2>/dev/null || true)
 fi
 
 # Build the message

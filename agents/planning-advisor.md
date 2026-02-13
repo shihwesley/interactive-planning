@@ -4,30 +4,21 @@ description: |
   Use this agent when the user's request involves a complex, multi-step task that would benefit from structured planning before jumping into implementation. The agent checks if planning files already exist and suggests using /interactive-planning if they don't.
 
   <example>
-  Context: User asks to build a new feature that touches multiple files and has unclear requirements.
   user: "Add a notification system with email, push, and in-app channels"
   assistant: "This is a multi-domain feature with several moving parts. Let me check if you have a plan set up."
-  <commentary>
-  The task spans 3+ concerns (email, push, in-app), has architecture decisions to make, and would benefit from spec decomposition before coding.
-  </commentary>
+  <commentary>Spans 3+ concerns, needs architecture decisions. Suggest spec-driven planning.</commentary>
   </example>
 
   <example>
-  Context: User asks to refactor a system with many dependencies.
   user: "Refactor the authentication flow to support SSO"
   assistant: "Auth refactoring affects many downstream systems. Let me suggest setting up a structured plan first."
-  <commentary>
-  Refactoring auth is risky, has unclear scope, and touches many files. Planning prevents rework.
-  </commentary>
+  <commentary>Risky refactor, unclear scope, many files. Planning prevents rework.</commentary>
   </example>
 
   <example>
-  Context: User asks a simple, clear question. Agent should NOT trigger.
   user: "Fix the typo in the header component"
   assistant: "I'll fix that directly."
-  <commentary>
-  Single-file, clear task. No planning needed. Agent should not trigger for simple tasks.
-  </commentary>
+  <commentary>Single-file, clear task. Agent should not trigger.</commentary>
   </example>
 
 model: haiku

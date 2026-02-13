@@ -106,14 +106,13 @@ AskUserQuestion(
 
 ### Gate 3 (Spec-Driven): Approach + Spec Decomposition
 
-If spec-driven mode was selected in Gate 1, replace Gate 3 above with this combined gate.
+If spec-driven mode was selected in Gate 1, replace Gate 3 above with this combined gate:
 
-The agent:
-1. Analyzes requirements from Gate 2
-2. Proposes an architectural approach
-3. Decomposes into spec files with dependency relationships
-4. Auto-computes sprint/phase grouping via topological sort of dependency DAG
-5. Presents everything together for user validation
+1. Analyze requirements from Gate 2
+2. Propose an architectural approach
+3. Decompose into spec files with dependency relationships
+4. Auto-compute sprint/phase grouping via topological sort of dependency DAG
+5. Present everything together for user validation
 
 Present to user:
 
@@ -203,17 +202,17 @@ Write to: `docs/plans/manifest.md`
 
 #### Step 3: Generate individual spec files
 
-For each spec identified in Gate 3, use the spec template at
+For each spec from Gate 3, use the template at
 `${CLAUDE_PLUGIN_ROOT}/skills/interactive-planning/templates/spec-template.md`.
 
 Fill in:
 - YAML frontmatter: name, phase, sprint, parent, depends_on, status=draft, created date
 - Requirements: distribute Gate 2 requirements to relevant specs
-- Acceptance criteria: derive testable criteria from requirements
+- Acceptance criteria: testable criteria derived from requirements
 - Technical approach: from Gate 3
-- Files: infer from codebase structure or project conventions
-- Tasks: derive 2-5 tasks per spec from requirements
-- Dependencies: what it needs from upstream specs, what it provides downstream
+- Files: inferred from codebase structure or project conventions
+- Tasks: 2-5 per spec, derived from requirements
+- Dependencies: what it needs from upstream, what it provides downstream
 
 Write each to: `docs/plans/specs/{name}-spec.md`
 
@@ -267,15 +266,11 @@ TaskCreate(
 TaskUpdate(taskId="1b", addBlockedBy=["1a"])
 ```
 
-**Inter-spec handoff rule:** A downstream spec's first sub-task is blocked by the
-upstream spec's **last** sub-task (not the parent). This prevents the downstream
-spec from starting before the upstream spec's work is actually finished.
+**Inter-spec handoff:** A downstream spec's first sub-task is blocked by the upstream spec's **last** sub-task (not the parent), so work actually finishes before the next spec starts.
 
-**Naming convention:** Sub-task subjects are prefixed with their spec name
-(`data-model: Create schema`) so the flat task list stays readable.
+**Naming:** Sub-task subjects are prefixed with their spec name (`data-model: Create schema`) to keep the flat task list readable.
 
-**Completion rule:** When ALL sub-tasks for a spec are completed,
-mark the parent spec task as completed too.
+**Completion:** When all sub-tasks for a spec complete, mark the parent spec task completed too.
 
 Then continue to Gate 4 below.
 
@@ -400,15 +395,9 @@ AskUserQuestion(
 
 ### Task Status Updates
 
-**When starting a phase:**
 ```python
-TaskUpdate(taskId="1", status="in_progress")
-```
-
-**When completing a phase:**
-```python
-TaskUpdate(taskId="1", status="completed")
-# Next task auto-unblocks if it was waiting
+TaskUpdate(taskId="1", status="in_progress")   # when starting
+TaskUpdate(taskId="1", status="completed")      # when done (auto-unblocks next task)
 ```
 
 ### Manual Checkpoints (use AskUserQuestion)
@@ -422,17 +411,15 @@ TaskUpdate(taskId="1", status="completed")
 
 ### The 2-Action Rule
 
-After every 2 view/browser/search operations:
-> IMMEDIATELY write findings to findings.md
-> Multimodal content doesn't persist - capture as text NOW
+After every 2 view/browser/search operations, write findings to findings.md immediately. Multimodal content doesn't persist -- capture as text now.
 
 ### The 3-Strike Protocol
 
 ```
 ATTEMPT 1: Diagnose & fix
-ATTEMPT 2: Alternative approach (NEVER repeat same action)
+ATTEMPT 2: Alternative approach (never repeat same action)
 ATTEMPT 3: Broader rethink, search for solutions
-AFTER 3: AskUserQuestion to escalate
+AFTER 3:   AskUserQuestion to escalate
 ```
 
 ---
@@ -450,17 +437,9 @@ AFTER 3: AskUserQuestion to escalate
 
 ## When to Use
 
-**Use this skill for:**
-- Multi-step tasks (3+ steps)
-- Tasks with unclear requirements
-- Tasks with multiple valid approaches
-- Research projects
-- Anything needing user alignment
+**Use for:** Multi-step tasks, unclear requirements, multiple valid approaches, research, anything needing user alignment.
 
-**Skip for:**
-- Simple questions
-- Single-file edits
-- Tasks with crystal-clear requirements
+**Skip for:** Simple questions, single-file edits, tasks with obvious solutions.
 
 ---
 
