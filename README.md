@@ -39,7 +39,7 @@ Then you build phase by phase, with checkpoints at every transition.
 
 ```bash
 /plugin marketplace add shihwesley/shihwesley-plugins
-/plugin install interactive-planning @shihwesley-plugins
+/plugin install interactive-planning@shihwesley-plugins
 ```
 
 ## Usage
