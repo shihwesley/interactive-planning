@@ -38,11 +38,8 @@ Then you build phase by phase, with checkpoints at every transition.
 ## Install
 
 ```bash
-# From GitHub
-/plugin marketplace add shihwesley/interactive-planning
-
-# Or local testing
-claude --plugin-dir /path/to/interactive-planning
+/plugin marketplace add shihwesley/shihwesley-plugins
+/plugin install interactive-planning @shihwesley-plugins
 ```
 
 ## Usage
@@ -85,9 +82,9 @@ Removes planning files (with confirmation). Asks if you want to keep findings.md
 
 ### Auto-detection
 
-The plugin includes a `planning-advisor` agent that watches for complex tasks (3+ files, ambiguous requirements, cross-cutting concerns) and suggests planning when appropriate. It won't auto-start — just a nudge.
+The `planning-advisor` agent watches for complex tasks (3+ files, ambiguous requirements, cross-cutting concerns) and suggests planning. It never auto-starts -- just a nudge.
 
-On session start, a hook checks for existing planning files and alerts you if a previous session is in progress.
+A SessionStart hook checks for existing planning files and alerts you if a previous session is in progress.
 
 ## Planning modes
 
@@ -99,9 +96,9 @@ Good for: single features, bug investigations, refactors with clear scope.
 
 ### Spec-driven
 
-Creates `docs/plans/manifest.md` with a dependency DAG (Mermaid), plus individual spec files in `docs/plans/specs/`. Each spec has requirements, acceptance criteria, tasks, and dependency declarations.
+Creates `docs/plans/manifest.md` with a dependency DAG (Mermaid) and individual spec files in `docs/plans/specs/`. Each spec has requirements, acceptance criteria, tasks, and dependency declarations.
 
-Phases and sprints are auto-computed via topological sort of the dependency graph. Two-level task tracking: spec-level parents with sub-tasks that have intra-spec sequential blocking and inter-spec handoff rules.
+Phases and sprints are auto-computed via topological sort. Two-level task tracking: spec-level parents with sub-tasks, intra-spec sequential blocking, and inter-spec handoff rules.
 
 Good for: multi-domain features, large refactors, anything where separate concerns need their own requirements documents.
 
