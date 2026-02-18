@@ -389,6 +389,50 @@ AskUserQuestion(
 )
 ```
 
+### Gate 5: Architecture Review
+
+Before writing any code, review the plan against these dimensions. For every issue or recommendation, explain the concrete tradeoffs, give an opinionated recommendation, and ask the user for input before assuming a direction.
+
+**Evaluate:**
+
+1. **System design & component boundaries** -- Are responsibilities cleanly separated? Are there components doing too much, or artificial splits that will cause shotgun surgery later?
+2. **Dependency graph & coupling** -- Map which components depend on which. Flag circular dependencies, God-object risks, and areas where a change would cascade across boundaries.
+3. **Data flow & bottlenecks** -- Trace the primary data paths. Identify where transformations happen, where data gets copied vs referenced, and any hot paths that could become bottlenecks under load.
+4. **Scaling characteristics & single points of failure** -- What breaks first at 10x? At 100x? Where are the SPOFs that would take down the whole system?
+5. **Security architecture** -- Review auth boundaries (who can access what, how are credentials handled). Check data access patterns (are there exposed internal models leaking through API boundaries?). Evaluate API surface area (are endpoints scoped tightly, or is there an overly permissive surface?).
+6. **Error handling & failure modes** -- Distinct from SPOFs (which identify *where* failure happens). This covers *what happens after* failure. Are error paths real recovery strategies or just `catch → log → rethrow`? Does the system degrade gracefully or fall over entirely? Are failure scenarios between components handled explicitly or left to hope?
+7. **Testability** -- Can components be tested in isolation? Are boundaries mockable? This is the concrete verification that dimensions 1-2 (boundaries, coupling) actually hold in practice — you can describe clean architecture on paper that's untestable due to hidden runtime dependencies. If you can't write a test for it without standing up the whole system, the design has a problem.
+8. **Existing codebase fit** *(skip for greenfield)* -- Does the plan introduce a second way of doing things? If the codebase uses pattern A and the plan introduces pattern B for the same concern, that's a maintenance tax. Either commit to migrating everything to B (and scope that work) or match A for consistency.
+
+**Format findings as:**
+
+```markdown
+#### [Dimension Name]
+
+**Current plan:** [what the plan says]
+**Concern:** [specific issue found, or "None — looks solid"]
+**Tradeoff:** [what you gain vs what you lose if changed]
+**Recommendation:** [opinionated direction with reasoning]
+```
+
+Then gate on the findings:
+
+```python
+AskUserQuestion(
+  question="Architecture review complete — see findings above. How do you want to proceed?",
+  header="Arch Review",
+  options=[
+    {"label": "Approve, start building", "description": "No changes needed, move to Phase 3"},
+    {"label": "Revise plan", "description": "Update tasks/specs based on review findings"},
+    {"label": "Dig deeper", "description": "Investigate a specific concern in more detail"}
+  ]
+)
+```
+
+If the user chooses **Revise plan**, update the relevant tasks, spec files, and findings.md, then re-run Gate 5. If **Dig deeper**, investigate and present findings before asking again.
+
+**Engineering calibration:** Throughout the review, target code that's "engineered enough" — not under-engineered (fragile, hacky, missing obvious error paths) and not over-engineered (premature abstractions, speculative generality, unnecessary indirection). When flagging a concern, explicitly state which side it leans toward and what the right level of investment looks like for this specific project's stage and scale.
+
 ---
 
 ## Phase 3: Execution with Checkpoints
@@ -428,10 +472,11 @@ AFTER 3:   AskUserQuestion to escalate
 
 1. **Gates before tasks** - Run interactive gates before creating tasks
 2. **Tasks before code** - TaskCreate for all phases before any implementation
-3. **Update task status** - TaskUpdate(in_progress) when starting, (completed) when done
-4. **Read findings before decide** - Re-read findings.md for big decisions
-5. **Log to files** - Errors/research go in progress.md and findings.md
-6. **Ask when stuck** - Use AskUserQuestion at checkpoints, not just initially
+3. **Review before code** - Run Gate 5 (Architecture Review) after plan validation, before any implementation
+4. **Update task status** - TaskUpdate(in_progress) when starting, (completed) when done
+5. **Read findings before decide** - Re-read findings.md for big decisions
+6. **Log to files** - Errors/research go in progress.md and findings.md
+7. **Ask when stuck** - Use AskUserQuestion at checkpoints, not just initially
 
 ---
 
@@ -451,6 +496,8 @@ AFTER 3:   AskUserQuestion to escalate
 | Assume requirements | Validate with Gate 2 |
 | Pick approach silently | Use Gate 3 if multiple options |
 | Start coding without tasks | TaskCreate for all phases FIRST |
+| Skip architecture review | Run Gate 5 before any implementation |
+| Assume an architecture direction silently | Present tradeoffs, recommend, ask for input |
 | Track progress in markdown checkboxes | Use TaskUpdate for status |
 | Store large research in task descriptions | Use findings.md |
 | Ask too many questions | Batch related questions |
