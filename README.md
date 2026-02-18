@@ -6,6 +6,7 @@ Two modes: **task-based** for straightforward features, **spec-driven** for mult
 
 ## Contents
 
+- [What's new in v4.2.0](#whats-new-in-v420)
 - [How it works](#how-it-works)
 - [Install](#install)
 - [Usage](#usage)
@@ -13,6 +14,23 @@ Two modes: **task-based** for straightforward features, **spec-driven** for mult
 - [What's in the box](#whats-in-the-box)
 - [Key concepts](#key-concepts)
 - [Gate flow](#gate-flow)
+
+## What's new in v4.2.0
+
+**Gate 5: Architecture Review** — a mandatory review step between plan validation and execution. Before any code gets written, the plan is evaluated across 8 dimensions:
+
+| Dimension | What it catches |
+|-----------|----------------|
+| System design & boundaries | Responsibility leaks, shotgun surgery |
+| Dependency graph & coupling | Cascading changes, circular deps |
+| Data flow & bottlenecks | Hot paths, unnecessary copies |
+| Scaling & SPOFs | What breaks at 10x/100x |
+| Security architecture | Auth gaps, leaky API surfaces |
+| Error handling & failure modes | Recovery vs crash, graceful degradation |
+| Testability | Hidden runtime deps, isolation problems |
+| Existing codebase fit | Pattern conflicts, maintenance tax |
+
+Every finding includes concrete tradeoffs, an opinionated recommendation, and a user input gate before assuming direction. An **engineering calibration** lens runs across all dimensions — flagging both under-engineering (fragile, hacky) and over-engineering (premature abstraction, unnecessary complexity).
 
 ## How it works
 
@@ -118,6 +136,8 @@ Good for: multi-domain features, large refactors, anything where separate concer
 
 **Tasks before code** — All phases exist as TaskCreate entries before any implementation starts.
 
+**Review before code** — Gate 5 (Architecture Review) runs after plan validation. No implementation until the architecture clears review.
+
 **2-Action Rule** — After every 2 search/browse operations, write findings to findings.md immediately.
 
 **3-Strike Protocol** — Three attempts at a failing approach, then escalate to the user.
@@ -137,8 +157,11 @@ flowchart TD
     F --> H[Create manifest.md + spec files + findings.md]
     G --> I{Gate 4: Validate plan}
     H --> I
-    I -->|Approved| J[Execute with checkpoints]
     I -->|Adjust| B
+    I -->|Approved| P{Gate 5: Architecture Review}
+    P -->|Approve| J[Execute with checkpoints]
+    P -->|Revise| I
+    P -->|Dig deeper| P
     J --> K{Phase complete?}
     K -->|Yes| L{More phases?}
     K -->|Stuck| M[3-Strike Protocol]
