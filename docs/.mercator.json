@@ -1,0 +1,298 @@
+{
+  "root": "/Users/quartershots/Source/interactive-planning",
+  "files": [
+    {
+      "path": ".claude-plugin/plugin.json",
+      "tokens": 252,
+      "size_bytes": 1039,
+      "hash": "6d6d06d3a83b"
+    },
+    {
+      "path": "agents/planning-advisor.md",
+      "tokens": 604,
+      "size_bytes": 2731,
+      "hash": "f99126f86f93"
+    },
+    {
+      "path": "commands/interactive-planning.md",
+      "tokens": 670,
+      "size_bytes": 2711,
+      "hash": "5e5f95ca217a"
+    },
+    {
+      "path": "docs/.mercator.json",
+      "tokens": 2100,
+      "size_bytes": 6862,
+      "hash": "8156e6df1579"
+    },
+    {
+      "path": "docs/.mercator.json.tmp",
+      "tokens": 0,
+      "size_bytes": 0,
+      "hash": "e3b0c44298fc"
+    },
+    {
+      "path": "docs/CODEBASE_MAP.md",
+      "tokens": 2373,
+      "size_bytes": 9811,
+      "hash": "c5fcaaf5c2ac"
+    },
+    {
+      "path": "hooks/scripts/detect-planning-files.sh",
+      "tokens": 421,
+      "size_bytes": 1472,
+      "hash": "9590898c8773"
+    },
+    {
+      "path": "hooks/hooks.json",
+      "tokens": 87,
+      "size_bytes": 358,
+      "hash": "484ee5b0522e"
+    },
+    {
+      "path": "skills/interactive-planning/templates/manifest-template.md",
+      "tokens": 169,
+      "size_bytes": 611,
+      "hash": "e8a3ff81fe65"
+    },
+    {
+      "path": "skills/interactive-planning/templates/spec-template.md",
+      "tokens": 241,
+      "size_bytes": 888,
+      "hash": "3d8875447dfc"
+    },
+    {
+      "path": "skills/interactive-planning/SKILL.md",
+      "tokens": 4300,
+      "size_bytes": 18073,
+      "hash": "9883ca9ec5d3"
+    },
+    {
+      "path": ".gitignore",
+      "tokens": 36,
+      "size_bytes": 129,
+      "hash": "beaf7f7df106"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "tokens": 204,
+      "size_bytes": 946,
+      "hash": "4d0cd2d341f6"
+    },
+    {
+      "path": "CLAUDE.md",
+      "tokens": 148,
+      "size_bytes": 684,
+      "hash": "4ec38171c147"
+    },
+    {
+      "path": "LICENSE",
+      "tokens": 220,
+      "size_bytes": 1068,
+      "hash": "a89cd636ee94"
+    },
+    {
+      "path": "README.md",
+      "tokens": 1476,
+      "size_bytes": 6222,
+      "hash": "0c3b60659242"
+    },
+    {
+      "path": "SIMPLIFICATION_LOG.md",
+      "tokens": 604,
+      "size_bytes": 2317,
+      "hash": "207028f732d4"
+    }
+  ],
+  "directories": [
+    ".claude",
+    ".claude-plugin",
+    "agents",
+    "commands",
+    "docs",
+    "hooks",
+    "hooks/scripts",
+    "skills",
+    "skills/interactive-planning",
+    "skills/interactive-planning/templates"
+  ],
+  "total_tokens": 13905,
+  "total_files": 17,
+  "skipped": [],
+  "merkle": {
+    "root_hash": "c37f6c73b32d",
+    "tree": {
+      ".claude-plugin/plugin.json": {
+        "hash": "6d6d06d3a83b",
+        "tokens": 252,
+        "type": "file"
+      },
+      ".claude-plugin": {
+        "hash": "97b41d01e942",
+        "children": [
+          ".claude-plugin/plugin.json"
+        ],
+        "type": "dir"
+      },
+      "agents/planning-advisor.md": {
+        "hash": "f99126f86f93",
+        "tokens": 604,
+        "type": "file"
+      },
+      "agents": {
+        "hash": "e44cc11d398c",
+        "children": [
+          "agents/planning-advisor.md"
+        ],
+        "type": "dir"
+      },
+      "commands/interactive-planning.md": {
+        "hash": "5e5f95ca217a",
+        "tokens": 670,
+        "type": "file"
+      },
+      "commands": {
+        "hash": "5b4ad9443ee6",
+        "children": [
+          "commands/interactive-planning.md"
+        ],
+        "type": "dir"
+      },
+      "docs/.mercator.json": {
+        "hash": "8156e6df1579",
+        "tokens": 2100,
+        "type": "file"
+      },
+      "docs/.mercator.json.tmp": {
+        "hash": "e3b0c44298fc",
+        "tokens": 0,
+        "type": "file"
+      },
+      "docs/CODEBASE_MAP.md": {
+        "hash": "c5fcaaf5c2ac",
+        "tokens": 2373,
+        "type": "file"
+      },
+      "docs": {
+        "hash": "3c0cec569211",
+        "children": [
+          "docs/.mercator.json",
+          "docs/.mercator.json.tmp",
+          "docs/CODEBASE_MAP.md"
+        ],
+        "type": "dir"
+      },
+      "hooks/scripts/detect-planning-files.sh": {
+        "hash": "9590898c8773",
+        "tokens": 421,
+        "type": "file"
+      },
+      "hooks/scripts": {
+        "hash": "e8af55872df6",
+        "children": [
+          "hooks/scripts/detect-planning-files.sh"
+        ],
+        "type": "dir"
+      },
+      "hooks/hooks.json": {
+        "hash": "484ee5b0522e",
+        "tokens": 87,
+        "type": "file"
+      },
+      "hooks": {
+        "hash": "92e972cc8ac1",
+        "children": [
+          "hooks/scripts",
+          "hooks/hooks.json"
+        ],
+        "type": "dir"
+      },
+      "skills/interactive-planning/templates/manifest-template.md": {
+        "hash": "e8a3ff81fe65",
+        "tokens": 169,
+        "type": "file"
+      },
+      "skills/interactive-planning/templates/spec-template.md": {
+        "hash": "3d8875447dfc",
+        "tokens": 241,
+        "type": "file"
+      },
+      "skills/interactive-planning/templates": {
+        "hash": "a20553f5cb48",
+        "children": [
+          "skills/interactive-planning/templates/manifest-template.md",
+          "skills/interactive-planning/templates/spec-template.md"
+        ],
+        "type": "dir"
+      },
+      "skills/interactive-planning/SKILL.md": {
+        "hash": "9883ca9ec5d3",
+        "tokens": 4300,
+        "type": "file"
+      },
+      "skills/interactive-planning": {
+        "hash": "71c0a9dc6372",
+        "children": [
+          "skills/interactive-planning/templates",
+          "skills/interactive-planning/SKILL.md"
+        ],
+        "type": "dir"
+      },
+      "skills": {
+        "hash": "74abc574eb2a",
+        "children": [
+          "skills/interactive-planning"
+        ],
+        "type": "dir"
+      },
+      ".gitignore": {
+        "hash": "beaf7f7df106",
+        "tokens": 36,
+        "type": "file"
+      },
+      "CHANGELOG.md": {
+        "hash": "4d0cd2d341f6",
+        "tokens": 204,
+        "type": "file"
+      },
+      "CLAUDE.md": {
+        "hash": "4ec38171c147",
+        "tokens": 148,
+        "type": "file"
+      },
+      "LICENSE": {
+        "hash": "a89cd636ee94",
+        "tokens": 220,
+        "type": "file"
+      },
+      "README.md": {
+        "hash": "0c3b60659242",
+        "tokens": 1476,
+        "type": "file"
+      },
+      "SIMPLIFICATION_LOG.md": {
+        "hash": "207028f732d4",
+        "tokens": 604,
+        "type": "file"
+      },
+      "/": {
+        "hash": "c37f6c73b32d",
+        "children": [
+          ".claude-plugin",
+          "agents",
+          "commands",
+          "docs",
+          "hooks",
+          "skills",
+          ".gitignore",
+          "CHANGELOG.md",
+          "CLAUDE.md",
+          "LICENSE",
+          "README.md",
+          "SIMPLIFICATION_LOG.md"
+        ],
+        "type": "dir"
+      }
+    }
+  }
+}
