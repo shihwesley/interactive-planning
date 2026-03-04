@@ -3,27 +3,27 @@
   "files": [
     {
       "path": ".claude-plugin/plugin.json",
-      "tokens": 252,
-      "size_bytes": 1039,
-      "hash": "6d6d06d3a83b"
+      "tokens": 298,
+      "size_bytes": 1242,
+      "hash": "b7e620a44528"
     },
     {
       "path": "agents/planning-advisor.md",
-      "tokens": 604,
-      "size_bytes": 2731,
-      "hash": "f99126f86f93"
+      "tokens": 681,
+      "size_bytes": 3027,
+      "hash": "51e2de2d0dc0"
     },
     {
       "path": "commands/interactive-planning.md",
-      "tokens": 670,
-      "size_bytes": 2711,
-      "hash": "5e5f95ca217a"
+      "tokens": 1379,
+      "size_bytes": 5392,
+      "hash": "04f8872c5b1c"
     },
     {
       "path": "docs/.mercator.json",
       "tokens": 2100,
       "size_bytes": 6862,
-      "hash": "8156e6df1579"
+      "hash": "a794089759da"
     },
     {
       "path": "docs/.mercator.json.tmp",
@@ -33,15 +33,15 @@
     },
     {
       "path": "docs/CODEBASE_MAP.md",
-      "tokens": 2373,
-      "size_bytes": 9811,
-      "hash": "c5fcaaf5c2ac"
+      "tokens": 2992,
+      "size_bytes": 12135,
+      "hash": "9b41b0bc1dd7"
     },
     {
       "path": "hooks/scripts/detect-planning-files.sh",
-      "tokens": 421,
-      "size_bytes": 1472,
-      "hash": "9590898c8773"
+      "tokens": 992,
+      "size_bytes": 3306,
+      "hash": "6f6f9e2a10dd"
     },
     {
       "path": "hooks/hooks.json",
@@ -51,27 +51,27 @@
     },
     {
       "path": "skills/interactive-planning/templates/manifest-template.md",
-      "tokens": 169,
-      "size_bytes": 611,
-      "hash": "e8a3ff81fe65"
+      "tokens": 191,
+      "size_bytes": 698,
+      "hash": "46c309414953"
     },
     {
       "path": "skills/interactive-planning/templates/spec-template.md",
-      "tokens": 241,
-      "size_bytes": 888,
-      "hash": "3d8875447dfc"
+      "tokens": 250,
+      "size_bytes": 922,
+      "hash": "12161a3dd0a5"
     },
     {
       "path": "skills/interactive-planning/SKILL.md",
-      "tokens": 4300,
-      "size_bytes": 18073,
-      "hash": "9883ca9ec5d3"
+      "tokens": 5427,
+      "size_bytes": 22411,
+      "hash": "c287aa8aa366"
     },
     {
       "path": ".gitignore",
-      "tokens": 36,
-      "size_bytes": 129,
-      "hash": "beaf7f7df106"
+      "tokens": 45,
+      "size_bytes": 147,
+      "hash": "8cbe642a5db5"
     },
     {
       "path": "CHANGELOG.md",
@@ -81,9 +81,9 @@
     },
     {
       "path": "CLAUDE.md",
-      "tokens": 148,
-      "size_bytes": 684,
-      "hash": "4ec38171c147"
+      "tokens": 208,
+      "size_bytes": 884,
+      "hash": "5a1079a71811"
     },
     {
       "path": "LICENSE",
@@ -116,50 +116,50 @@
     "skills/interactive-planning",
     "skills/interactive-planning/templates"
   ],
-  "total_tokens": 13905,
+  "total_tokens": 17154,
   "total_files": 17,
   "skipped": [],
   "merkle": {
-    "root_hash": "c37f6c73b32d",
+    "root_hash": "7ea57cf2e590",
     "tree": {
       ".claude-plugin/plugin.json": {
-        "hash": "6d6d06d3a83b",
-        "tokens": 252,
+        "hash": "b7e620a44528",
+        "tokens": 298,
         "type": "file"
       },
       ".claude-plugin": {
-        "hash": "97b41d01e942",
+        "hash": "fa5b77562a69",
         "children": [
           ".claude-plugin/plugin.json"
         ],
         "type": "dir"
       },
       "agents/planning-advisor.md": {
-        "hash": "f99126f86f93",
-        "tokens": 604,
+        "hash": "51e2de2d0dc0",
+        "tokens": 681,
         "type": "file"
       },
       "agents": {
-        "hash": "e44cc11d398c",
+        "hash": "963dad92a4f3",
         "children": [
           "agents/planning-advisor.md"
         ],
         "type": "dir"
       },
       "commands/interactive-planning.md": {
-        "hash": "5e5f95ca217a",
-        "tokens": 670,
+        "hash": "04f8872c5b1c",
+        "tokens": 1379,
         "type": "file"
       },
       "commands": {
-        "hash": "5b4ad9443ee6",
+        "hash": "b5202d2073f1",
         "children": [
           "commands/interactive-planning.md"
         ],
         "type": "dir"
       },
       "docs/.mercator.json": {
-        "hash": "8156e6df1579",
+        "hash": "a794089759da",
         "tokens": 2100,
         "type": "file"
       },
@@ -169,12 +169,12 @@
         "type": "file"
       },
       "docs/CODEBASE_MAP.md": {
-        "hash": "c5fcaaf5c2ac",
-        "tokens": 2373,
+        "hash": "9b41b0bc1dd7",
+        "tokens": 2992,
         "type": "file"
       },
       "docs": {
-        "hash": "3c0cec569211",
+        "hash": "62ec160440f2",
         "children": [
           "docs/.mercator.json",
           "docs/.mercator.json.tmp",
@@ -183,12 +183,12 @@
         "type": "dir"
       },
       "hooks/scripts/detect-planning-files.sh": {
-        "hash": "9590898c8773",
-        "tokens": 421,
+        "hash": "6f6f9e2a10dd",
+        "tokens": 992,
         "type": "file"
       },
       "hooks/scripts": {
-        "hash": "e8af55872df6",
+        "hash": "3a1b1c4436a0",
         "children": [
           "hooks/scripts/detect-planning-files.sh"
         ],
@@ -200,7 +200,7 @@
         "type": "file"
       },
       "hooks": {
-        "hash": "92e972cc8ac1",
+        "hash": "04d463d2df40",
         "children": [
           "hooks/scripts",
           "hooks/hooks.json"
@@ -208,17 +208,17 @@
         "type": "dir"
       },
       "skills/interactive-planning/templates/manifest-template.md": {
-        "hash": "e8a3ff81fe65",
-        "tokens": 169,
+        "hash": "46c309414953",
+        "tokens": 191,
         "type": "file"
       },
       "skills/interactive-planning/templates/spec-template.md": {
-        "hash": "3d8875447dfc",
-        "tokens": 241,
+        "hash": "12161a3dd0a5",
+        "tokens": 250,
         "type": "file"
       },
       "skills/interactive-planning/templates": {
-        "hash": "a20553f5cb48",
+        "hash": "341c6e21e19c",
         "children": [
           "skills/interactive-planning/templates/manifest-template.md",
           "skills/interactive-planning/templates/spec-template.md"
@@ -226,12 +226,12 @@
         "type": "dir"
       },
       "skills/interactive-planning/SKILL.md": {
-        "hash": "9883ca9ec5d3",
-        "tokens": 4300,
+        "hash": "c287aa8aa366",
+        "tokens": 5427,
         "type": "file"
       },
       "skills/interactive-planning": {
-        "hash": "71c0a9dc6372",
+        "hash": "37024cfb1c2f",
         "children": [
           "skills/interactive-planning/templates",
           "skills/interactive-planning/SKILL.md"
@@ -239,15 +239,15 @@
         "type": "dir"
       },
       "skills": {
-        "hash": "74abc574eb2a",
+        "hash": "6569eabf2841",
         "children": [
           "skills/interactive-planning"
         ],
         "type": "dir"
       },
       ".gitignore": {
-        "hash": "beaf7f7df106",
-        "tokens": 36,
+        "hash": "8cbe642a5db5",
+        "tokens": 45,
         "type": "file"
       },
       "CHANGELOG.md": {
@@ -256,8 +256,8 @@
         "type": "file"
       },
       "CLAUDE.md": {
-        "hash": "4ec38171c147",
-        "tokens": 148,
+        "hash": "5a1079a71811",
+        "tokens": 208,
         "type": "file"
       },
       "LICENSE": {
@@ -276,7 +276,7 @@
         "type": "file"
       },
       "/": {
-        "hash": "c37f6c73b32d",
+        "hash": "7ea57cf2e590",
         "children": [
           ".claude-plugin",
           "agents",

@@ -1,5 +1,6 @@
 ---
 name: {SPEC_NAME}
+plan: {PLAN_CATEGORY}/{PLAN_NAME}
 phase: {PHASE_NUMBER}
 sprint: {SPRINT_NUMBER}
 parent: {PARENT_SPEC_NAME or null}

@@ -1,6 +1,6 @@
 ---
 name: interactive-planning
-description: "File-based planning with interactive gates and native task tracking. Use when starting complex multi-step tasks, projects with unclear requirements, tasks with multiple valid approaches, or research projects. Supports task-based (single plan file) and spec-driven (multi-file specs with manifest) modes. Phase/Sprint/Spec hierarchy with dependency DAG. Triggers on: 'plan this', 'let me think through this', 'break this down', 'create a plan', 'spec this out', 'what should the approach be'."
+description: "File-based planning with interactive gates and native task tracking. Use when starting complex multi-step tasks, projects with unclear requirements, tasks with multiple valid approaches, or research projects. Supports task-based (single plan file) and spec-driven (multi-file specs with manifest) modes. Phase/Sprint/Spec hierarchy with dependency DAG. Plans are categorized (feat/fix/refactor/review/test/polish/general) and stored in docs/plans/{category}/{name}/. Triggers on: 'plan this', 'let me think through this', 'break this down', 'create a plan', 'spec this out', 'what should the approach be'."
 ---
 
 # Interactive Planning (Manus + AskUserQuestion)
@@ -20,22 +20,109 @@ AskUserQuestion = User alignment (prevents rework)
 > Ask users before committing to approaches
 ```
 
+## Plan Directory Structure
+
+Each planning session lives in its own directory under `docs/plans/{category}/{plan-name}/`:
+
+```
+docs/plans/
+  feat/auth-system/           # new feature plan
+    manifest.md               # (spec-driven) or task_plan.md (task-based)
+    specs/                    # (spec-driven only)
+    findings.md
+    progress.md
+  fix/login-crash/            # bug fix plan
+    task_plan.md
+    findings.md
+    progress.md
+  general/app-architecture/   # whole-app planning
+    manifest.md
+    specs/
+    findings.md
+    progress.md
+```
+
+**Categories:** `general`, `feat`, `fix`, `refactor`, `review`, `test`, `polish`
+
+All file references below use `{PLAN_DIR}` which resolves to `docs/plans/{category}/{plan-name}`.
+
 ---
 
 ## Phase 0: Session Recovery
 
-**Before anything else**, check for existing planning files:
+**Before anything else**, scan for existing planning sessions:
 
 ```bash
+# Scan categorized plan directories
+find docs/plans -maxdepth 3 \( -name manifest.md -o -name task_plan.md \) 2>/dev/null
+# Also check legacy flat paths (pre-v5 plans)
 ls task_plan.md findings.md progress.md docs/plans/manifest.md 2>/dev/null
 ```
 
-If files exist:
+**If multiple plans found:**
+1. List all plans with their category, name, and mode (spec-driven vs task-based)
+2. Ask the user which plan to resume:
+```python
+AskUserQuestion(
+  question="Found multiple planning sessions. Which one to resume?",
+  header="Resume",
+  options=[
+    # One option per discovered plan, e.g.:
+    {"label": "feat/auth-system", "description": "Spec-driven, Phase 1 Sprint 2, 3/7 specs done"},
+    {"label": "fix/login-crash", "description": "Task-based, Phase 2, 4/6 tasks done"},
+    {"label": "Start new plan", "description": "Begin a fresh planning session"}
+  ]
+)
+```
+
+**If single plan found:**
 1. `git diff --stat` to see code changes since last session
-2. Read existing planning files
+2. Read existing planning files from that plan's directory
 3. Check TaskList for existing tasks
 4. Update files and task statuses based on context
 5. Then proceed from where you left off
+
+**If legacy flat-path files found** (task_plan.md at project root or docs/plans/manifest.md without category subdirectory):
+1. Treat as a pre-v5 plan — resume from existing paths without migrating
+2. On next `/interactive-planning reset`, these files will be cleaned up
+
+---
+
+## Phase 0.5: Auto-detect Plan Category + Name
+
+Before Gate 1, analyze the user's initial request to auto-classify the plan.
+
+**Category detection heuristics** (match against user's description):
+
+| Keywords / signals | Category |
+|---|---|
+| fix, bug, crash, broken, error, issue, regression | `fix` |
+| test, coverage, unit test, integration, spec test, QA | `test` |
+| refactor, restructure, rewrite, migrate, modernize, rename, extract | `refactor` |
+| review, audit, assess, evaluate, check, inspect, analyze quality | `review` |
+| polish, improve UX, animation, performance, accessibility, a11y, perf | `polish` |
+| architecture, bootstrap, scaffold, whole app, project setup, general plan | `general` |
+| Default (new functionality, add, create, build, implement) | `feat` |
+
+**Plan name derivation:**
+1. Extract the key noun phrase from the user's description
+2. Slugify: lowercase, hyphens for spaces, strip special characters, max 40 chars
+3. Examples: "Plan the authentication system" → `auth-system`, "Fix the login crash on iOS 18" → `login-crash-ios18`
+
+Set:
+```
+PLAN_CATEGORY = {detected category}
+PLAN_NAME = {derived slug}
+PLAN_DIR = docs/plans/{PLAN_CATEGORY}/{PLAN_NAME}
+```
+
+Display to user before Gate 1:
+```
+Plan: {PLAN_CATEGORY}/{PLAN_NAME}
+Directory: docs/plans/{PLAN_CATEGORY}/{PLAN_NAME}/
+```
+
+The user can correct this at Gate 1 via "Other" if the auto-detection is wrong.
 
 ---
 
@@ -48,7 +135,7 @@ Use AskUserQuestion BEFORE creating any files. Two questions:
 **Question 1: Planning Mode**
 ```python
 AskUserQuestion(
-  question="What kind of planning does this need?",
+  question="What kind of planning does this need? (Plan: {PLAN_CATEGORY}/{PLAN_NAME})",
   header="Mode",
   options=[
     {"label": "Task-based (Recommended)", "description": "Single task_plan.md with phases. Best for straightforward features."},
@@ -59,6 +146,8 @@ AskUserQuestion(
 
 If "Task-based" -> continue with existing flow (Gates 2-4 unchanged).
 If "Spec-driven" -> continue with Gates 2, 3 (enhanced), 4 (enhanced) below.
+
+Note: The detected plan category/name is shown in the question text. If the user selects "Other" and provides a different category or name, update `PLAN_CATEGORY`, `PLAN_NAME`, and `PLAN_DIR` accordingly.
 
 **Question 2: Priority** (asked regardless of mode)
 ```python
@@ -157,24 +246,28 @@ AskUserQuestion(
 
 ## Phase 2: Create Tasks and Files
 
-After gates pass, create **tasks** for phases and **files** for research.
+After gates pass, create the plan directory and **tasks** for phases and **files** for research.
+
+```bash
+mkdir -p {PLAN_DIR}
+```
 
 ### Task-Based Mode: Create Tasks + Files
 
-For each phase identified, create a task:
+Create `{PLAN_DIR}/task_plan.md` with the plan content, then create tasks for each phase:
 
 ```python
 # Phase 1
 TaskCreate(
   subject="Phase 1: [Title]",
-  description="[Details from gates]\n- Task 1\n- Task 2",
+  description="Plan: {PLAN_CATEGORY}/{PLAN_NAME}\n[Details from gates]\n- Task 1\n- Task 2",
   activeForm="Working on Phase 1"
 )
 
 # Phase 2 (blocked by Phase 1)
 TaskCreate(
   subject="Phase 2: [Title]",
-  description="[Details]",
+  description="Plan: {PLAN_CATEGORY}/{PLAN_NAME}\n[Details]",
   activeForm="Working on Phase 2"
 )
 # Then: TaskUpdate(taskId="2", addBlockedBy=["1"])
@@ -185,7 +278,7 @@ TaskCreate(
 #### Step 1: Create specs/ directory
 
 ```bash
-mkdir -p docs/plans/specs
+mkdir -p {PLAN_DIR}/specs
 ```
 
 #### Step 2: Generate manifest.md
@@ -194,11 +287,12 @@ Use the manifest template at `${CLAUDE_PLUGIN_ROOT}/skills/interactive-planning/
 
 Fill in:
 - Project name, date, mode ("spec-driven"), priority from Gate 1
+- Category and plan name from Phase 0.5
 - Dependency graph (Mermaid) from Gate 3 decomposition
 - Phase/Sprint/Spec map from auto-assignment
 - Spec files table with paths and approximate line counts
 
-Write to: `docs/plans/manifest.md`
+Write to: `{PLAN_DIR}/manifest.md`
 
 #### Step 3: Generate individual spec files
 
@@ -214,15 +308,17 @@ Fill in:
 - Tasks: 2-5 per spec, derived from requirements
 - Dependencies: what it needs from upstream, what it provides downstream
 
-Write each to: `docs/plans/specs/{name}-spec.md`
+Write each to: `{PLAN_DIR}/specs/{name}-spec.md`
 
 #### Step 4: Create findings.md (spec-driven enhanced)
 
 Use the spec-driven findings.md template below (not the task-based version).
+Write to: `{PLAN_DIR}/findings.md`
 
 #### Step 5: Create progress.md (spec-driven enhanced)
 
 Use the spec-driven progress.md template below.
+Write to: `{PLAN_DIR}/progress.md`
 
 #### Step 6: Create two-level TaskCreate entries
 
@@ -234,7 +330,7 @@ Create tasks at two levels: **spec tasks** (parents) and **sub-tasks** (from the
 # Create one parent task per spec
 TaskCreate(
   subject="Spec: {spec-name}",
-  description="Implement docs/plans/specs/{spec-name}-spec.md\nPhase {N}, Sprint {M}\nDepends on: {deps}\n\nParent task. Sub-tasks below do the actual work.",
+  description="Plan: {PLAN_CATEGORY}/{PLAN_NAME}\nImplement {PLAN_DIR}/specs/{spec-name}-spec.md\nPhase {N}, Sprint {M}\nDepends on: {deps}\n\nParent task. Sub-tasks below do the actual work.",
   activeForm="Implementing {spec-name}"
 )
 
@@ -252,7 +348,7 @@ that references its parent spec and is blocked by the previous sub-task:
 # Sub-task 1
 TaskCreate(
   subject="data-model: Create database schema",
-  description="Spec: data-model (Phase 1, Sprint 1)\nParent task: #{spec_task_id}",
+  description="Plan: {PLAN_CATEGORY}/{PLAN_NAME}\nSpec: data-model (Phase 1, Sprint 1)\nParent task: #{spec_task_id}",
   activeForm="Creating database schema"
 )
 TaskUpdate(taskId="1a", addBlockedBy=["{upstream_spec_last_subtask}"])
@@ -260,7 +356,7 @@ TaskUpdate(taskId="1a", addBlockedBy=["{upstream_spec_last_subtask}"])
 # Sub-task 2 -- blocked by sub-task 1
 TaskCreate(
   subject="data-model: Write migration",
-  description="Spec: data-model (Phase 1, Sprint 1)\nParent task: #{spec_task_id}",
+  description="Plan: {PLAN_CATEGORY}/{PLAN_NAME}\nSpec: data-model (Phase 1, Sprint 1)\nParent task: #{spec_task_id}",
   activeForm="Writing migration"
 )
 TaskUpdate(taskId="1b", addBlockedBy=["1a"])
@@ -278,9 +374,15 @@ Then continue to Gate 4 below.
 
 **Task-based mode** -- use the base template.
 **Spec-driven mode** -- use the base template WITH the spec-driven sections.
+Write to: `{PLAN_DIR}/findings.md`
 
 ```markdown
 # Findings & Decisions
+
+## Plan
+- **Category:** {PLAN_CATEGORY}
+- **Name:** {PLAN_NAME}
+- **Directory:** {PLAN_DIR}
 
 ## Goal
 [One sentence from Gate 2]
@@ -300,8 +402,8 @@ Then continue to Gate 4 below.
 <!-- SPEC-DRIVEN ONLY: include the sections below -->
 
 ## Spec Map
-> Manifest: docs/plans/manifest.md
-> Specs directory: docs/plans/specs/
+> Manifest: {PLAN_DIR}/manifest.md
+> Specs directory: {PLAN_DIR}/specs/
 
 ### Dependency DAG
 {Copy the Mermaid graph from manifest.md here}
@@ -335,9 +437,12 @@ Then continue to Gate 4 below.
 
 **Task-based mode** -- use without the spec sections.
 **Spec-driven mode** -- include the Spec Status table.
+Write to: `{PLAN_DIR}/progress.md`
 
 ```markdown
 # Progress Log
+
+## Plan: {PLAN_CATEGORY}/{PLAN_NAME}
 
 ## Session: [DATE]
 
@@ -379,7 +484,7 @@ After creating tasks and files:
 TaskList()
 
 AskUserQuestion(
-  question="Created X tasks (visible in UI). Ready to proceed?",
+  question="Created X tasks in {PLAN_CATEGORY}/{PLAN_NAME} (visible in UI). Ready to proceed?",
   header="Validate",
   options=[
     {"label": "Looks good, proceed", "description": "Start Phase 1"},
@@ -455,7 +560,7 @@ TaskUpdate(taskId="1", status="completed")      # when done (auto-unblocks next 
 
 ### The 2-Action Rule
 
-After every 2 view/browser/search operations, write findings to findings.md immediately. Multimodal content doesn't persist -- capture as text now.
+After every 2 view/browser/search operations, write findings to `{PLAN_DIR}/findings.md` immediately. Multimodal content doesn't persist -- capture as text now.
 
 ### The 3-Strike Protocol
 
@@ -474,8 +579,8 @@ AFTER 3:   AskUserQuestion to escalate
 2. **Tasks before code** - TaskCreate for all phases before any implementation
 3. **Review before code** - Run Gate 5 (Architecture Review) after plan validation, before any implementation
 4. **Update task status** - TaskUpdate(in_progress) when starting, (completed) when done
-5. **Read findings before decide** - Re-read findings.md for big decisions
-6. **Log to files** - Errors/research go in progress.md and findings.md
+5. **Read findings before decide** - Re-read `{PLAN_DIR}/findings.md` for big decisions
+6. **Log to files** - Errors/research go in `{PLAN_DIR}/progress.md` and `{PLAN_DIR}/findings.md`
 7. **Ask when stuck** - Use AskUserQuestion at checkpoints, not just initially
 
 ---
@@ -499,6 +604,7 @@ AFTER 3:   AskUserQuestion to escalate
 | Skip architecture review | Run Gate 5 before any implementation |
 | Assume an architecture direction silently | Present tradeoffs, recommend, ask for input |
 | Track progress in markdown checkboxes | Use TaskUpdate for status |
-| Store large research in task descriptions | Use findings.md |
+| Store large research in task descriptions | Use `{PLAN_DIR}/findings.md` |
 | Ask too many questions | Batch related questions |
 | Forget to update task status | TaskUpdate(completed) when done |
+| Use hardcoded docs/plans/ paths | Always use `{PLAN_DIR}` variable |

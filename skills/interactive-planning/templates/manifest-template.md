@@ -3,6 +3,9 @@ project: {PROJECT_NAME}
 created: {DATE}
 mode: spec-driven
 priority: {speed|quality|flexibility|simplicity}
+category: {PLAN_CATEGORY}
+plan_name: {PLAN_NAME}
+plan_dir: docs/plans/{PLAN_CATEGORY}/{PLAN_NAME}
 ---
 
 # Plan Manifest
@@ -21,7 +24,7 @@ priority: {speed|quality|flexibility|simplicity}
 
 | Spec | Path | Lines | Description |
 |------|------|-------|-------------|
-| {name} | docs/plans/specs/{name}-spec.md | {approx} | {one-liner} |
+| {name} | specs/{name}-spec.md | {approx} | {one-liner} |
 
 ## Findings
 > See findings.md
