@@ -21,9 +21,9 @@
     },
     {
       "path": "docs/.mercator.json",
-      "tokens": 2100,
-      "size_bytes": 6862,
-      "hash": "a794089759da"
+      "tokens": 2103,
+      "size_bytes": 6865,
+      "hash": "f53a0914fadc"
     },
     {
       "path": "docs/.mercator.json.tmp",
@@ -116,11 +116,11 @@
     "skills/interactive-planning",
     "skills/interactive-planning/templates"
   ],
-  "total_tokens": 17154,
+  "total_tokens": 17157,
   "total_files": 17,
   "skipped": [],
   "merkle": {
-    "root_hash": "7ea57cf2e590",
+    "root_hash": "143047b89d90",
     "tree": {
       ".claude-plugin/plugin.json": {
         "hash": "b7e620a44528",
@@ -159,8 +159,8 @@
         "type": "dir"
       },
       "docs/.mercator.json": {
-        "hash": "a794089759da",
-        "tokens": 2100,
+        "hash": "f53a0914fadc",
+        "tokens": 2103,
         "type": "file"
       },
       "docs/.mercator.json.tmp": {
@@ -174,7 +174,7 @@
         "type": "file"
       },
       "docs": {
-        "hash": "62ec160440f2",
+        "hash": "37ab0733d4f0",
         "children": [
           "docs/.mercator.json",
           "docs/.mercator.json.tmp",
@@ -276,7 +276,7 @@
         "type": "file"
       },
       "/": {
-        "hash": "7ea57cf2e590",
+        "hash": "143047b89d90",
         "children": [
           ".claude-plugin",
           "agents",
