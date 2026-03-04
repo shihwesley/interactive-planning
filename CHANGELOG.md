@@ -1,5 +1,26 @@
 # Changelog
 
+## 5.0.0 (2026-03-03)
+
+### Breaking Changes
+- Plan files now live in `docs/plans/{category}/{name}/` instead of flat `docs/plans/`. Legacy flat-path plans are detected and resumable but not migrated automatically.
+- `findings.md` and `progress.md` moved inside the plan directory (no longer at project root).
+
+### Added
+- **Categorized plan directories**: 7 categories (general, feat, fix, refactor, review, test, polish) for multi-plan coexistence.
+- **Auto-detection (Phase 0.5)**: Category and plan name inferred from user's request via keyword heuristics — no extra gate question.
+- **Multi-plan session recovery**: Phase 0 scans `docs/plans/*/*/` and lists all active plans when multiple exist.
+- **Targeted commands**: `resume feat/auth`, `status fix/login-crash`, `reset refactor/data-layer` — operate on specific plans.
+- **`list` subcommand**: Table view of all active planning sessions with mode, category, and status.
+- **`PLAN_DIR` variable**: All file paths in SKILL.md are parameterized, no more hardcoded `docs/plans/`.
+
+### Changed
+- Session hook scans categorized directories recursively instead of checking fixed paths.
+- Manifest template includes `category`, `plan_name`, `plan_dir` in frontmatter.
+- Spec template includes `plan` field linking to its parent plan.
+- Planning advisor scans categorized directories and suggests category in output.
+- Codebase map updated for v5 architecture.
+
 ## 4.1.0 (2026-02-13)
 
 Initial plugin release. Extracted from personal skill library and packaged as a distributable Claude Code plugin.
