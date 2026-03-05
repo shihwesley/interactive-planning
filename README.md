@@ -6,6 +6,7 @@ Two modes: **task-based** for straightforward features, **spec-driven** for mult
 
 ## Contents
 
+- [What's new in v5.1.0](#whats-new-in-v510)
 - [What's new in v5.0.0](#whats-new-in-v500)
 - [How it works](#how-it-works)
 - [Install](#install)
@@ -15,6 +16,32 @@ Two modes: **task-based** for straightforward features, **spec-driven** for mult
 - [What's in the box](#whats-in-the-box)
 - [Key concepts](#key-concepts)
 - [Gate flow](#gate-flow)
+
+## What's new in v5.1.0
+
+**Workflow contract** — planning now generates three additional files that bridge `/interactive-planning` and `/orchestrate`:
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `workflow.md` | Plan directory | Declarative execution config: retry behavior, between-phase gates, Liquid-style prompt templates |
+| `handoff.md` | `.claude/handoff.md` | Fixed-size file (~100-150 lines) that each phase agent reads on start and overwrites on finish. The only communication channel between sequential phase runners. |
+| `progress-log.md` | `.claude/progress-log.md` | Append-only session history. Newest-first entries for human review. Phase agents never read this. |
+
+Inspired by [OpenAI's Symphony](https://github.com/openai/symphony) workflow contract pattern. The key idea: separate what the agent does (plan phases) from how phases get executed (retry, gates, prompts).
+
+**Gate 1 now asks project type** (greenfield / brownfield / prototype). This feeds into `workflow.md` so phase agents know the development context.
+
+**Prompt templates** — `workflow.md` includes a `## Phase Prompt` and `## Continuation Prompt` section with `{{ variable }}` placeholders. The orchestrator renders these per-phase, so each agent gets a tailored prompt with prior phase summaries, acceptance criteria, and workspace paths.
+
+**Continuation retries** — when a phase fails, the orchestrator auto-retries with a continuation prompt that tells the agent "this is attempt #N, don't restart from scratch." Configurable via `execution.max_phase_retries` in `workflow.md`.
+
+**Between-phase gates** — choose `auto` (proceed without asking), `manual` (confirm before each phase), or `review` (show diff summary then confirm). Set via `execution.gates.between_phases` in `workflow.md`.
+
+**Progress enforcement** — `strict` mode validates that `handoff.md` was actually updated before a phase reports completion. Catches the stale-progress-file problem where code changes land but the tracking file doesn't get updated.
+
+All changes are backward compatible. Existing plans without `workflow.md` work exactly as before.
+
+### Previous: v5.0.0
 
 ## What's new in v5.0.0
 
@@ -94,6 +121,10 @@ Claude creates:
     specs/inapp-spec.md
     findings.md                     <- decisions, research
     progress.md                     <- session log, reboot check
+    workflow.md                     <- execution contract for /orchestrate
+  .claude/
+    handoff.md                      <- inter-agent communication (fixed-size)
+    progress-log.md                 <- append-only session history
   + TaskCreate entries with blocking dependencies wired up
 ```
 
@@ -189,15 +220,18 @@ docs/plans/
     specs/
     findings.md
     progress.md
+    workflow.md               # execution contract (v5.1+)
   fix/login-crash/          # bug fix
     task_plan.md
     findings.md
     progress.md
+    workflow.md
   general/app-architecture/ # whole-app planning
     manifest.md
     specs/
     findings.md
     progress.md
+    workflow.md
 ```
 
 Category is auto-detected from your request. Override anytime via "Other" at Gate 1.
@@ -211,7 +245,7 @@ Each plan is self-contained — `findings.md` and `progress.md` live inside the 
 | Component | File | Purpose |
 |-----------|------|---------|
 | Skill | `skills/interactive-planning/SKILL.md` | Core planning methodology |
-| Templates | `skills/interactive-planning/templates/` | Manifest and spec file templates |
+| Templates | `skills/interactive-planning/templates/` | Manifest, spec, workflow, handoff, progress-log templates |
 | Command | `commands/interactive-planning.md` | `/interactive-planning` with subcommands |
 | Agent | `agents/planning-advisor.md` | Auto-detect complex tasks |
 | Hook | `hooks/hooks.json` | SessionStart plan detection |
