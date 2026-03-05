@@ -1,5 +1,21 @@
 # Changelog
 
+## 5.1.0 (2026-03-05)
+
+### Added
+- **Workflow contract** (`workflow.md`): declarative execution config with YAML frontmatter for retry behavior, between-phase gates, progress enforcement, and Liquid-style prompt templates.
+- **Handoff file** (`handoff.md`): fixed-size inter-agent communication file (<150 lines) that phase runners read on start and overwrite on finish. Carries architecture decisions, last phase summary, and workspace state.
+- **Progress log** (`progress-log.md`): append-only session history with structured entries (timestamps, files changed, commits, blockers). Phase agents never read it; TLDR hook summarizes for humans.
+- **Project type gate**: Gate 1 now asks greenfield/brownfield/prototype, feeding into workflow.md config.
+- **Continuation prompts**: retry logic passes attempt number and previous failure reason to the phase agent so it doesn't restart from scratch.
+- **Between-phase gates**: configurable auto/manual/review modes in workflow.md.
+- **Progress enforcement**: strict/warn/none modes that validate handoff.md was actually updated before marking a phase complete.
+- Three new templates: `workflow-template.md`, `handoff-template.md`, `progress-log-template.md`.
+
+### Changed
+- Gate 4 summary now mentions the workflow contract files.
+- Plan directory examples in README include `workflow.md`.
+
 ## 5.0.0 (2026-03-03)
 
 ### Breaking Changes
